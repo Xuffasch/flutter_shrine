@@ -40,6 +40,10 @@ ThemeData _buildShrineTheme() {
     primaryIconTheme: base.iconTheme.copyWith(
       color: kShrineBrown900,
     ),
+
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(),
+    ),
   );
 }
 
