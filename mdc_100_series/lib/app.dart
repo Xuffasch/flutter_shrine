@@ -30,12 +30,16 @@ ThemeData _buildShrineTheme() {
       textTheme: ButtonTextTheme.normal,
     ),
     scaffoldBackgroundColor: kShrineBackgroundWhite,
-    cardColor: kShrinePink100,
+    cardColor: kShrineBackgroundWhite,
     textSelectionColor: kShrinePink100,
     errorColor: kShrineErrorRed,
     textTheme: _buildShrineTextTheme(base.textTheme),
     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
     accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+
+    primaryIconTheme: base.iconTheme.copyWith(
+      color: kShrineBrown900,
+    ),
   );
 }
 
