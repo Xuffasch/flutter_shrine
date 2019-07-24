@@ -33,6 +33,28 @@ ThemeData _buildShrineTheme() {
     cardColor: kShrinePink100,
     textSelectionColor: kShrinePink100,
     errorColor: kShrineErrorRed,
+    textTheme: _buildShrineTextTheme(base.textTheme),
+    primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
+    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+  );
+}
+
+TextTheme _buildShrineTextTheme(TextTheme base) {
+  return base.copyWith(
+    headline: base.headline.copyWith(
+      fontWeight: FontWeight.w500,
+    ),
+    title: base.title.copyWith(
+      fontSize: 18.0,
+    ),
+    caption: base.caption.copyWith(
+      fontWeight: FontWeight.w400,
+      fontSize: 14.0,
+    ),
+  ).apply(
+    fontFamily: 'Rubik',
+    displayColor: kShrineBrown900,
+    bodyColor: kShrineBrown900,
   );
 }
 
