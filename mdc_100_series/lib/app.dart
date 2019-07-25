@@ -93,7 +93,7 @@ class _ShrineAppState extends State<ShrineApp> {
       // TODO: Change home: to a Backdrop with a HomePage frontLayer (104)
       home: Backdrop(
         currentCategory: _currentCategory,
-        frontLayer: HomePage(),
+        frontLayer: HomePage(category: _currentCategory),
         backLayer: CategoryMenuPage(
           currentCategory: _currentCategory,
           onCategoryTap: _onCategoryTap,

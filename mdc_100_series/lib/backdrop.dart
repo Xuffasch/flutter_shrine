@@ -77,6 +77,7 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
         PositionedTransition(
           rect: layerAnimation,
           child: _FrontLayer(
+            onTap: _toggleBackdropLayerVisibility,
             child: widget.frontLayer
           ),
         ),
@@ -121,13 +122,27 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       body: LayoutBuilder(builder: _buildStack),
     );
   }
+
+  @override
+  void didUpdateWidget(Backdrop old) {
+    super.didUpdateWidget(old);
+
+    if (widget.currentCategory != old.currentCategory) {
+      _toggleBackdropLayerVisibility();
+    } else if (!_frontLayerVisible) {
+      _controller.fling(velocity: _kFlingVelocity);
+    }
+  }
+
 }
 
 class _FrontLayer extends StatelessWidget {
   final Widget child;
+  final VoidCallback onTap;
 
   const _FrontLayer({
     Key key,
+    this.onTap,
     this.child,
   }) : super(key: key);
 
@@ -141,6 +156,14 @@ class _FrontLayer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: Container(
+              height: 40.0,
+              alignment: AlignmentDirectional.centerStart,
+            ),
+          ),
           Expanded(
             child: child,
           ),
