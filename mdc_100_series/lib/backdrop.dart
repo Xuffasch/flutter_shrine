@@ -3,6 +3,8 @@ import 'package:meta/meta.dart';
 
 import 'model/product.dart';
 
+const double _kFlingVelocity = 2.0;
+
 class Backdrop extends StatefulWidget {
   final Category currentCategory;
   final Widget frontLayer;
@@ -29,12 +31,55 @@ class Backdrop extends StatefulWidget {
 class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin {
   final GlobalKey _backdropKey = GlobalKey(debugLabel: 'Backdrop');
 
-  Widget _buildStack() {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      value: 1.0,
+      vsync: this,
+    );
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  bool get _frontLayerVisible {
+    final AnimationStatus status = _controller.status;
+    return status == AnimationStatus.completed || status == AnimationStatus.forward;
+  }
+
+  void _toggleBackdropLayerVisibility() {
+    _controller.fling(velocity: _frontLayerVisible ? -_kFlingVelocity : _kFlingVelocity);
+  }
+
+  Widget _buildStack(BuildContext context, BoxConstraints constraints) {
+    const double layerTitleHeight = 48.0;
+    final Size layerSize = constraints.biggest;
+    final double layerTop = layerSize.height - layerTitleHeight;
+    
+    Animation<RelativeRect> layerAnimation = RelativeRectTween(
+      begin: RelativeRect.fromLTRB(0.0, layerTop, 0.0, layerTop - layerSize.height),
+      end: RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
+    ).animate(_controller.view);
+
     return Stack(
       key: _backdropKey,
       children: <Widget>[
-        widget.backLayer,
-        _FrontLayer(child: widget.frontLayer),
+        ExcludeSemantics(
+          child: widget.backLayer,
+          excluding: _frontLayerVisible,
+        ),
+        PositionedTransition(
+          rect: layerAnimation,
+          child: _FrontLayer(
+            child: widget.frontLayer
+          ),
+        ),
       ],
     );
   }
@@ -45,7 +90,10 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       brightness: Brightness.light,
       elevation: 0.0,
       titleSpacing: 0.0,
-      leading: Icon(Icons.menu),
+      leading: IconButton(
+        icon: Icon(Icons.menu),
+        onPressed: _toggleBackdropLayerVisibility,
+      ),
       title: Text("SHRINE"),
       actions: <Widget>[
         IconButton(
@@ -70,7 +118,7 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
     );
     return Scaffold(
       appBar: appBar,
-      body: _buildStack(),
+      body: LayoutBuilder(builder: _buildStack),
     );
   }
 }
