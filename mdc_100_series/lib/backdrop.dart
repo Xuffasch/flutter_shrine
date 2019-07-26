@@ -92,11 +92,12 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       brightness: Brightness.light,
       elevation: 0.0,
       titleSpacing: 0.0,
-      leading: IconButton(
-        icon: Icon(Icons.menu),
-        onPressed: _toggleBackdropLayerVisibility,
+      title: _BackdropTitle(
+        listenable: _controller.view,
+        onPress: _toggleBackdropLayerVisibility,
+        frontTitle: widget.frontTitle,
+        backTitle: widget.backTitle,
       ),
-      title: Text("SHRINE"),
       actions: <Widget>[
         IconButton(
           icon: Icon(
